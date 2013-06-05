@@ -1,7 +1,7 @@
 'use strict'; /*jslint node: true, es5: true, indent: 2 */
 var util = require('util');
 var stream = require('stream');
-var gzbz2 = require('./');
+var gzbz = require('./');
 
 var _Deflater = function(opts) {
   stream.Transform.call(this, opts);
@@ -54,14 +54,14 @@ _Inflater.prototype._flush = function(callback) {
 // Gzip
 var GzipDeflater = exports.GzipDeflater = function(opts) {
   if (opts === undefined) opts = {}; // e.g., {encoding: 'utf8', level: 1}
-  this.z = new gzbz2.Gzip();
+  this.z = new gzbz.Gzip();
   _Deflater.call(this, opts);
 };
 util.inherits(GzipDeflater, _Deflater);
 
 var GzipInflater = exports.GzipInflater = function(opts) {
   if (opts === undefined) opts = {};
-  this.z = new gzbz2.Gunzip();
+  this.z = new gzbz.Gunzip();
   _Inflater.call(this, opts);
 };
 util.inherits(GzipInflater, _Inflater);
@@ -70,14 +70,14 @@ util.inherits(GzipInflater, _Inflater);
 // Bzip2
 var BzipDeflater = exports.BzipDeflater = function(opts) {
   if (opts === undefined) opts = {}; // e.g., {encoding: 'utf8', level: 1}
-  this.z = new gzbz2.Bzip();
+  this.z = new gzbz.Bzip();
   _Deflater.call(this, opts);
 };
 util.inherits(BzipDeflater, _Deflater);
 
 var BzipInflater = exports.BzipInflater = function(opts) {
   if (opts === undefined) opts = {};
-  this.z = new gzbz2.Bunzip();
+  this.z = new gzbz.Bunzip();
   _Inflater.call(this, opts);
 };
 util.inherits(BzipInflater, _Inflater);
