@@ -1,7 +1,7 @@
 'use strict'; /*jslint node: true, es5: true, indent: 2 */
 var util = require('util');
 var stream = require('stream');
-var gzbz2 = require('gzbz2');
+var gzbz2 = require('./');
 
 var _Deflater = function(opts) {
   stream.Transform.call(this, opts);
@@ -61,7 +61,7 @@ util.inherits(GzipDeflater, _Deflater);
 
 var GzipInflater = exports.GzipInflater = function(opts) {
   if (opts === undefined) opts = {};
-  this.z = new gzbz2.Gzip();
+  this.z = new gzbz2.Gunzip();
   _Inflater.call(this, opts);
 };
 util.inherits(GzipInflater, _Inflater);
@@ -77,7 +77,7 @@ util.inherits(BzipDeflater, _Deflater);
 
 var BzipInflater = exports.BzipInflater = function(opts) {
   if (opts === undefined) opts = {};
-  this.z = new gzbz2.Bzip();
+  this.z = new gzbz2.Bunzip();
   _Inflater.call(this, opts);
 };
 util.inherits(BzipInflater, _Inflater);
