@@ -1,22 +1,13 @@
 #include <node.h>
-#include <node_events.h>
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <node_buffer.h>
+#include <node_object_wrap.h>
 #include <string>
-#include "buffer_compat.h"
-
-#ifdef  WITH_GZIP
 #include <zlib.h>
-#endif//WITH_GZIP
-
-#ifdef  WITH_BZIP
-#define BZ_NO_STDIO
 #include <bzlib.h>
-#undef BZ_NO_STDIO
-#endif//WITH_BZIP
 
 #define CHUNK 16384
 
@@ -57,15 +48,14 @@ public:
   int length;
 };
 
-#ifdef  WITH_GZIP
-class Gzip : public EventEmitter {
+class Gzip : public ObjectWrap {
  public:
   static void Initialize(v8::Handle<v8::Object> target) {
     HandleScope scope;
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->Inherit(EventEmitter::constructor_template);
+    // t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "init", GzipInit);
@@ -210,8 +200,8 @@ class Gzip : public EventEmitter {
     if (Buffer::HasInstance(args[0])) {
        // buffer
        Local<Object> buffer = args[0]->ToObject();
-       len = BufferLength(buffer);
-       buf = BufferData(buffer);
+       len = Buffer::Length(buffer);
+       buf = Buffer::Data(buffer);
     } else {
       // string, default encoding is utf8
       enum encoding enc = args.Length() == 1 ? UTF8 : ParseEncoding(args[1], UTF8);
@@ -237,7 +227,7 @@ class Gzip : public EventEmitter {
       // output compressed data in a buffer
       Buffer* b = Buffer::New(out.length);
       if (out.length != 0) {
-        memcpy(BufferData(b), out.buffer, out.length);
+        memcpy(Buffer::Data(b), out.buffer, out.length);
       }
       return scope.Close(b->handle_);
     } else if (out.length == 0) {
@@ -267,7 +257,7 @@ class Gzip : public EventEmitter {
       // output compressed data in a buffer
       Buffer* b = Buffer::New(out.length);
       if (out.length != 0) {
-        memcpy(BufferData(b), out.buffer, out.length);
+        memcpy(Buffer::Data(b), out.buffer, out.length);
       }
       return scope.Close(b->handle_);
     } else if (out.length == 0) {
@@ -279,7 +269,7 @@ class Gzip : public EventEmitter {
     }
   }
 
-  Gzip() : EventEmitter(), use_buffers(true), encoding(BINARY) {
+  Gzip() : ObjectWrap(), use_buffers(true), encoding(BINARY) {
   }
 
   ~Gzip() {
@@ -292,14 +282,14 @@ class Gzip : public EventEmitter {
   enum encoding encoding;
 };
 
-class Gunzip : public EventEmitter {
+class Gunzip : public ObjectWrap {
  public:
   static void Initialize(v8::Handle<v8::Object> target) {
     HandleScope scope;
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->Inherit(EventEmitter::constructor_template);
+    // t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "init", GunzipInit);
@@ -416,8 +406,8 @@ class Gunzip : public EventEmitter {
     if (Buffer::HasInstance(args[0])) {
        // buffer
        Local<Object> buffer = args[0]->ToObject();
-       len = BufferLength(buffer);
-       buf = BufferData(buffer);
+       len = Buffer::Length(buffer);
+       buf = Buffer::Data(buffer);
     } else {
       // string, default encoding is binary. this is much worse than using a buffer
       enum encoding enc = args.Length() == 1 ? BINARY : ParseEncoding(args[1], BINARY);
@@ -443,7 +433,7 @@ class Gunzip : public EventEmitter {
       // output decompressed data in a buffer
       Buffer* b = Buffer::New(out.length);
       if (out.length != 0) {
-        memcpy(BufferData(b), out.buffer, out.length);
+        memcpy(Buffer::Data(b), out.buffer, out.length);
       }
       return scope.Close(b->handle_);
     } else if (out.length == 0) {
@@ -467,7 +457,7 @@ class Gunzip : public EventEmitter {
     return scope.Close(Undefined());
   }
 
-  Gunzip() : EventEmitter(), use_buffers(true), encoding(BINARY) {
+  Gunzip() : ObjectWrap(), use_buffers(true), encoding(BINARY) {
   }
 
   ~Gunzip() {
@@ -479,18 +469,16 @@ class Gunzip : public EventEmitter {
   bool use_buffers;
   enum encoding encoding;
 };
-#endif//WITH_GZIP
 
 
-#ifdef  WITH_BZIP
-class Bzip : public EventEmitter {
+class Bzip : public ObjectWrap {
  public:
   static void Initialize(v8::Handle<v8::Object> target) {
     HandleScope scope;
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->Inherit(EventEmitter::constructor_template);
+    // t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "init", BzipInit);
@@ -637,8 +625,8 @@ class Bzip : public EventEmitter {
     if (Buffer::HasInstance(args[0])) {
        // buffer
        Local<Object> buffer = args[0]->ToObject();
-       len = BufferLength(buffer);
-       buf = BufferData(buffer);
+       len = Buffer::Length(buffer);
+       buf = Buffer::Data(buffer);
     } else {
       // string, default encoding is utf8
       enum encoding enc = args.Length() == 1 ? UTF8 : ParseEncoding(args[1], UTF8);
@@ -664,7 +652,7 @@ class Bzip : public EventEmitter {
       // output compressed data in a buffer
       Buffer* b = Buffer::New(out.length);
       if (out.length != 0) {
-        memcpy(BufferData(b), out.buffer, out.length);
+        memcpy(Buffer::Data(b), out.buffer, out.length);
       }
       return scope.Close(b->handle_);
     } else if (out.length == 0) {
@@ -694,7 +682,7 @@ class Bzip : public EventEmitter {
       // output compressed data in a buffer
       Buffer* b = Buffer::New(out.length);
       if (out.length != 0) {
-        memcpy(BufferData(b), out.buffer, out.length);
+        memcpy(Buffer::Data(b), out.buffer, out.length);
       }
       return scope.Close(b->handle_);
     } else if (out.length == 0) {
@@ -706,7 +694,7 @@ class Bzip : public EventEmitter {
     }
   }
 
-  Bzip() : EventEmitter(), use_buffers(true), encoding(BINARY) {
+  Bzip() : ObjectWrap(), use_buffers(true), encoding(BINARY) {
   }
 
   ~Bzip() {
@@ -719,14 +707,14 @@ class Bzip : public EventEmitter {
   enum encoding encoding;
 };
 
-class Bunzip : public EventEmitter {
+class Bunzip : public ObjectWrap {
  public:
   static void Initialize(v8::Handle<v8::Object> target) {
     HandleScope scope;
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->Inherit(EventEmitter::constructor_template);
+    // t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "init", BunzipInit);
@@ -845,8 +833,8 @@ class Bunzip : public EventEmitter {
     if (Buffer::HasInstance(args[0])) {
        // buffer
        Local<Object> buffer = args[0]->ToObject();
-       len = BufferLength(buffer);
-       buf = BufferData(buffer);
+       len = Buffer::Length(buffer);
+       buf = Buffer::Data(buffer);
     } else {
       // string, default encoding is binary. this is much worse than using a buffer
       enum encoding enc = args.Length() == 1 ? BINARY : ParseEncoding(args[1], BINARY);
@@ -872,7 +860,7 @@ class Bunzip : public EventEmitter {
       // output decompressed data in a buffer
       Buffer* b = Buffer::New(out.length);
       if (out.length != 0) {
-        memcpy(BufferData(b), out.buffer, out.length);
+        memcpy(Buffer::Data(b), out.buffer, out.length);
       }
       return scope.Close(b->handle_);
     } else if (out.length == 0) {
@@ -896,7 +884,7 @@ class Bunzip : public EventEmitter {
     return scope.Close(Undefined());
   }
 
-  Bunzip() : EventEmitter(), use_buffers(true), encoding(BINARY) {
+  Bunzip() : ObjectWrap(), use_buffers(true), encoding(BINARY) {
   }
 
   ~Bunzip() {
@@ -908,20 +896,15 @@ class Bunzip : public EventEmitter {
   bool use_buffers;
   enum encoding encoding;
 };
-#endif//WITH_BZIP
 
 extern "C" {
   static void init(Handle<Object> target) {
     HandleScope scope;
-    #ifdef  WITH_GZIP
     Gzip::Initialize(target);
     Gunzip::Initialize(target);
-    #endif//WITH_GZIP
 
-    #ifdef  WITH_BZIP
     Bzip::Initialize(target);
     Bunzip::Initialize(target);
-    #endif//WITH_BZIP
   }
   NODE_MODULE(gzbz2, init);
 }
