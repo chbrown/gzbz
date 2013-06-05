@@ -906,5 +906,5 @@ extern "C" {
     Bzip::Initialize(target);
     Bunzip::Initialize(target);
   }
-  NODE_MODULE(gzbz2, init);
+  NODE_MODULE(gzbz, init);
 }

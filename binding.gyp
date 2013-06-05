@@ -1,9 +1,8 @@
 {
   'targets': [
     {
-      'target_name': 'gzbz2',
+      'target_name': 'gzbz',
       'defines': ['WITH_GZIP', 'WITH_BZIP'],
-      #'dependencies': ['zlib', 'bzlib'],
       'include_dirs': ['/usr/include', '/usr/local/include'],
       'sources': [ 'compress.cc' ],
       'cflags': [

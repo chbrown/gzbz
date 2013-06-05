@@ -1,20 +1,15 @@
 {
-  "name": "gzbz2",
-  "description": "Streaming gzip and bzip2, wrapper around zlib and bzlib.",
-  "homepage": "http://github.com/chbrown/node-gzbz2",
-  "bugs": {
-    "url": "http://github.com/chbrown/node-gzbz2/issues"
-  },
+  "name": "gzbz",
+  "description": "Streaming gzip (zlib) and bzip2 (bzlib).",
+  "homepage": "http://github.com/chbrown/gzbz",
+  "bugs": "http://github.com/chbrown/gzbz/issues",
   "version": "0.2.0",
   "author": "Christopher Brown <io@henrian.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/chbrown/node-gzbz2.git"
+    "url": "git://github.com/chbrown/gzbz.git"
   },
-  "main": "build/Release/gzbz2",
-  "directories": {
-    "lib": "build/Release/"
-  },
+  "main": "build/Release/gzbz",
   "engines": {
     "node": ">=0.5.0"
   },
