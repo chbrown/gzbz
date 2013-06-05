@@ -5,7 +5,7 @@
   "bugs": {
     "url": "http://github.com/chbrown/node-gzbz2/issues"
   },
-  "version": "0.1.4",
+  "version": "0.2.0",
   "author": "Christopher Brown <io@henrian.com>",
   "repository": {
     "type": "git",
