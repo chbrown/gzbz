@@ -2,7 +2,6 @@
   'targets': [
     {
       'target_name': 'gzbz',
-      'defines': ['WITH_GZIP', 'WITH_BZIP'],
       'include_dirs': ['/usr/include', '/usr/local/include'],
       'sources': [ 'compress.cc' ],
       'cflags': [
