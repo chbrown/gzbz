@@ -4,6 +4,11 @@
       'target_name': 'gzbz',
       'include_dirs': ['/usr/include', '/usr/local/include'],
       'sources': [ 'compress.cc' ],
+      'link_settings': {
+          'libraries': [
+              '-lz'
+          ]
+      },
       'cflags': [
         '-D_FILE_OFFSET_BITS=64',
         '-D_LARGEFILE_SOURCE',
