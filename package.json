@@ -3,7 +3,7 @@
   "description": "Streaming gzip (zlib) and bzip2 (bzlib).",
   "homepage": "http://github.com/chbrown/gzbz",
   "bugs": "http://github.com/chbrown/gzbz/issues",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Christopher Brown <io@henrian.com>",
   "repository": {
     "type": "git",
